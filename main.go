@@ -36,6 +36,24 @@ func main() {
 		fmt.Println("creating a player:", err)
 		return
 	}
+
+	var enemies []enemy
+	for i:=0; i <5; i++ {
+		for j:=0; j<3; j++ {
+			x := (float64(i) / 5) * screenWidth + (enemySize/2.0)
+			y := float64(j) * enemySize +(enemySize/2.0)
+
+			enemy, err := newEnemy(renderer, x, y)
+			if err != nil {
+				fmt.Println("creating a enemy:", err)
+				return
+			}
+			enemies = append(enemies, enemy)
+		}
+	}
+
+
+		renderer.Present()
 	for {
 		for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
 			switch event.(type) {
@@ -48,8 +66,11 @@ func main() {
 		renderer.SetDrawColor(255, 255, 255, 255)
 		renderer.Clear()
 		plr.draw(renderer)
+		plr.update()
 
+		for _, enemy := range enemies {
+			enemy.draw(renderer)
+		}
 		renderer.Present()
 	}
-
 }
